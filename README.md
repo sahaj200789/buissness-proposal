@@ -221,10 +221,8 @@ Stated plainly, because it matters for how these results should be read:
 - [ ] Multi-org Fabric network deployment (beyond single-node/demo)
 - [ ] Confusion matrix + per-class recall reporting for the minority grade classes
 
-## Team
+## Student
 
-> *(Add team name, members, and institution — e.g. IIT Guwahati)*
+> *(SAHAJ IIT Guwahati)*
 
-## License
 
-> *(Add a license — e.g. MIT — before making the repo public)*
