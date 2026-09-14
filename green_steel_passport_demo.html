@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Green Steel Passport — DPP Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6f3ea;
+    --paper-2:#efeadb;
+    --ink:#1c2b28;
+    --ink-soft:#57635e;
+    --teal-900:#132523;
+    --teal-800:#1e3a3a;
+    --teal-700:#2d4a4a;
+    --teal-500:#4a7772;
+    --green-600:#0f6b3a;
+    --green-700:#0b5530;
+    --green-bg:#e6efe6;
+    --blue-steel:#33587a;
+    --blue-bg:#e7edf3;
+    --amber:#a5661a;
+    --amber-bg:#f4e8d8;
+    --violet:#5b4a8a;
+    --violet-bg:#eae6f3;
+    --slate:#6b6558;
+    --slate-bg:#eeebe2;
+    --rule:#ddd5c1;
+    --danger:#a3312a;
+    --danger-bg:#f5e2df;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    font-size:15px;
+    line-height:1.5;
+  }
+  h1,h2,h3,.wordmark,.tab-btn,.stamp,.section-title{font-family:'Space Grotesk', sans-serif;}
+  .mono, .hash, input, select, button, code{font-family:'IBM Plex Mono', monospace;}
+  input, select, button, textarea{font-family:'IBM Plex Sans', sans-serif;}
+  .mono-field{font-family:'IBM Plex Mono', monospace;}
+
+  header{
+    background:var(--teal-800);
+    color:#f4f1e8;
+    border-bottom:3px solid var(--green-600);
+  }
+  .header-inner{
+    max-width:1080px;margin:0 auto;padding:22px 24px 0 24px;
+    display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;
+  }
+  .wordmark{font-size:22px;font-weight:700;letter-spacing:0.2px;}
+  .tagline{font-size:13px;color:#bcd0cb;margin-top:4px;}
+  .header-controls{display:flex;gap:10px;align-items:center;}
+  .role-switch{display:flex;background:rgba(255,255,255,0.08);border-radius:6px;padding:3px;}
+  .role-switch button{
+    background:transparent;border:none;color:#cfe0dc;padding:7px 14px;border-radius:5px;
+    font-size:13px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif;
+  }
+  .role-switch button.active{background:var(--green-600);color:white;}
+  nav.tabs{max-width:1080px;margin:18px auto 0 auto;padding:0 24px;display:flex;gap:28px;}
+  .tab-btn{
+    background:none;border:none;color:#9fb6b0;font-size:14px;font-weight:600;cursor:pointer;
+    padding:0 0 12px 0;border-bottom:3px solid transparent;
+  }
+  .tab-btn.active{color:white;border-bottom-color:var(--green-600);}
+
+  main{max-width:1080px;margin:0 auto;padding:36px 24px 80px 24px;}
+  .tab-panel{display:none;}
+  .tab-panel.active{display:block;}
+
+  .hero{padding:8px 0 28px 0;}
+  .hero h1{font-size:28px;margin:0 0 6px 0;font-weight:600;}
+  .hero p{color:var(--ink-soft);margin:0 0 20px 0;max-width:60ch;}
+  .search-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .search-row input{
+    flex:1;min-width:220px;padding:13px 14px;border:1px solid var(--rule);border-radius:4px;
+    font-size:15px;background:white;color:var(--ink);
+  }
+  .btn{
+    padding:13px 20px;border-radius:4px;border:none;font-size:14px;font-weight:600;cursor:pointer;
+    font-family:'IBM Plex Sans',sans-serif;
+  }
+  .btn-primary{background:var(--green-600);color:white;}
+  .btn-primary:hover{background:var(--green-700);}
+  .btn-ghost{background:transparent;border:1px solid var(--rule);color:var(--ink);}
+  .btn-ghost:hover{border-color:var(--ink-soft);}
+  .btn-danger{background:var(--danger);color:white;}
+  .btn:disabled{opacity:0.45;cursor:not-allowed;}
+  .suggest-row{margin-top:10px;font-size:13px;color:var(--ink-soft);}
+  .suggest-row button{
+    background:none;border:none;color:var(--blue-steel);text-decoration:underline;cursor:pointer;
+    font-size:13px;padding:0;margin-right:14px;font-family:'IBM Plex Mono',monospace;
+  }
+
+  .certificate{
+    position:relative;background:white;border:1px solid var(--rule);border-radius:5px;
+    padding:32px 32px 24px 32px;margin-top:26px;box-shadow:0 1px 0 rgba(0,0,0,0.03);
+  }
+  .cert-head{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:1px solid var(--rule);padding-bottom:16px;margin-bottom:6px;}
+  .cert-head h2{margin:0;font-size:20px;}
+  .cert-head .sub{color:var(--ink-soft);font-size:13px;margin-top:4px;}
+  .stamp{
+    position:absolute;top:26px;right:34px;width:104px;height:104px;border-radius:50%;
+    border:3px solid var(--green-600);color:var(--green-600);display:flex;align-items:center;justify-content:center;
+    text-align:center;font-weight:700;font-size:13px;transform:rotate(-10deg);letter-spacing:0.5px;
+    line-height:1.25;opacity:0.9;
+  }
+  .stamp.bad{border-color:var(--danger);color:var(--danger);}
+  .field{display:flex;justify-content:space-between;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--rule);gap:16px;}
+  .field:last-child{border-bottom:none;}
+  .field .fname{color:var(--ink-soft);font-size:13.5px;}
+  .field .fval{font-weight:600;text-align:right;}
+  .tag{
+    display:inline-flex;align-items:center;gap:5px;font-size:11px;padding:2px 8px;border-radius:20px;
+    margin-left:8px;font-family:'IBM Plex Sans',sans-serif;font-weight:500;
+  }
+  .tag.measured{background:var(--blue-bg);color:var(--blue-steel);}
+  .tag.cv{background:var(--amber-bg);color:var(--amber);}
+  .tag.model{background:var(--violet-bg);color:var(--violet);}
+  .tag.prov{background:var(--slate-bg);color:var(--slate);}
+  .tag.chain{background:var(--green-bg);color:var(--green-700);}
+
+  .hash-box{
+    margin-top:18px;padding:14px 16px;background:var(--paper-2);border-radius:4px;
+    font-size:12.5px;color:var(--ink-soft);word-break:break-all;
+  }
+  .hash-box .row{display:flex;justify-content:space-between;gap:12px;margin-bottom:6px;}
+  .hash-box .row:last-child{margin-bottom:0;}
+
+  .empty{padding:40px 0;color:var(--ink-soft);text-align:left;}
+  .empty strong{color:var(--ink);}
+
+  .zk-box{margin-top:22px;padding:20px;border:1px dashed var(--rule);border-radius:5px;background:var(--paper-2);}
+  .zk-box h3{margin:0 0 6px 0;font-size:15px;}
+  .zk-box p.note{color:var(--ink-soft);font-size:12.5px;margin:6px 0 14px 0;}
+  .zk-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .zk-row input{padding:10px 12px;border:1px solid var(--rule);border-radius:4px;width:140px;}
+  .verif-list{margin-top:14px;}
+  .verif-item{display:flex;justify-content:space-between;padding:9px 0;border-top:1px solid var(--rule);font-size:13px;}
+  .verif-item .ok{color:var(--green-700);font-weight:600;}
+  .verif-item .no{color:var(--danger);font-weight:600;}
+
+  .card{background:white;border:1px solid var(--rule);border-radius:5px;padding:26px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  label.field-label{display:block;font-size:12.5px;color:var(--ink-soft);margin-bottom:6px;margin-top:14px;}
+  input[type=text], input[type=number], select{
+    width:100%;padding:10px 12px;border:1px solid var(--rule);border-radius:4px;font-size:14px;background:white;
+  }
+  input[type=range]{width:100%;}
+  .form-actions{margin-top:22px;display:flex;gap:10px;align-items:center;}
+  .perm-note{margin-top:14px;padding:12px 14px;border-radius:4px;font-size:12.5px;background:var(--amber-bg);color:var(--amber);}
+  .success-note{margin-top:18px;padding:14px;border-radius:4px;background:var(--green-bg);color:var(--green-700);font-size:13.5px;}
+
+  .chain-scroll{display:flex;gap:0;overflow-x:auto;padding:10px 0 20px 0;}
+  .block-node{
+    min-width:160px;background:white;border:2px solid var(--rule);border-radius:6px;padding:12px 14px;
+    cursor:pointer;flex-shrink:0;
+  }
+  .block-node.selected{border-color:var(--green-600);}
+  .block-node.bad{border-color:var(--danger);background:var(--danger-bg);}
+  .block-node .bi{font-size:11px;color:var(--ink-soft);}
+  .block-node .bh{font-size:12px;font-weight:600;margin-top:4px;}
+  .block-node .bhash{font-size:10.5px;color:var(--ink-soft);margin-top:6px;word-break:break-all;}
+  .link{width:34px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+  .link .bar{width:100%;height:3px;background:var(--rule);}
+  .link.bad .bar{background:var(--danger);}
+
+  .detail-panel{margin-top:24px;}
+  .diff-row{display:flex;gap:16px;margin-top:10px;flex-wrap:wrap;}
+  .diff-col{flex:1;min-width:260px;background:var(--paper-2);padding:12px 14px;border-radius:4px;font-size:12px;word-break:break-all;}
+  .diff-col.mismatch{background:var(--danger-bg);color:var(--danger);}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:26px;font-size:12.5px;color:var(--ink-soft);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:9px;height:9px;border-radius:50%;display:inline-block;}
+
+  .section-title{font-size:13px;text-transform:none;color:var(--ink-soft);margin:30px 0 10px 0;font-weight:600;}
+  footer{border-top:1px solid var(--rule);padding:22px 24px 40px 24px;max-width:1080px;margin:0 auto;color:var(--ink-soft);font-size:12.5px;}
+
+  @media (max-width:640px){
+    .grid2{grid-template-columns:1fr;}
+    nav.tabs{gap:18px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="wordmark">GREEN STEEL PASSPORT</div>
+      <div class="tagline">Auditable carbon traceability for scrap-to-steel · DPP &amp; ledger demo</div>
+    </div>
+    <div class="header-controls">
+      <div class="role-switch">
+        <button id="role-public" class="active">Public / customer</button>
+        <button id="role-auditor">Auditor</button>
+      </div>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab-btn active" data-tab="viewer">DPP Viewer</button>
+    <button class="tab-btn" data-tab="portal">Mill Portal</button>
+    <button class="tab-btn" data-tab="ledger">Ledger Explorer</button>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ===================== VIEWER TAB ===================== -->
+  <section id="tab-viewer" class="tab-panel active">
+    <div class="hero">
+      <h1>Look up a heat</h1>
+      <p>Enter a Heat ID to retrieve its Digital Product Passport. What you see depends on your role — a public viewer sees verified claims only; an auditor sees the full evidence-linked certificate.</p>
+      <div class="search-row">
+        <input id="search-input" type="text" placeholder="e.g. HEAT-2026-0417" />
+        <button class="btn btn-primary" id="search-btn">Look up</button>
+      </div>
+      <div class="suggest-row" id="suggest-row"></div>
+    </div>
+    <div id="viewer-result"></div>
+  </section>
+
+  <!-- ===================== PORTAL TAB ===================== -->
+  <section id="tab-portal" class="tab-panel">
+    <div class="hero">
+      <h1>Mill portal — submit a heat record</h1>
+      <p>Simulates the CV + furnace-fusion pipeline output being written as a new DPP event. Only an enrolled mill identity can write; the smart contract rejects anyone else.</p>
+    </div>
+    <div class="card">
+      <label class="field-label">Writer identity (smart-contract identity check)</label>
+      <select id="mill-identity">
+        <option value="guest">Guest — not enrolled</option>
+        <option value="MillAMSP">Mill A (MillAMSP) — enrolled</option>
+        <option value="MillBMSP">Mill B (MillBMSP) — enrolled</option>
+      </select>
+
+      <div class="grid2">
+        <div>
+          <label class="field-label">Heat ID</label>
+          <input type="text" id="in-heatid" placeholder="HEAT-2026-XXXX" />
+        </div>
+        <div>
+          <label class="field-label">Model version</label>
+          <input type="text" id="in-modelver" value="gsp-pipeline-v0.3" />
+        </div>
+      </div>
+
+      <label class="field-label">Contamination level (drives CV-derived scrap grade) — <span id="contam-val">30</span>%</label>
+      <input type="range" id="in-contam" min="0" max="100" value="30" />
+
+      <div class="grid2">
+        <div>
+          <label class="field-label">Steel output (t) — measured</label>
+          <input type="number" id="in-steeloutput" value="61.9" step="0.1" />
+        </div>
+        <div>
+          <label class="field-label">Electricity (kWh) — measured</label>
+          <input type="number" id="in-electricity" value="26200" step="10" />
+        </div>
+        <div>
+          <label class="field-label">Carbon injection (kg) — measured</label>
+          <input type="number" id="in-carboninj" value="624" step="1" />
+        </div>
+        <div>
+          <label class="field-label">Furnace temperature (°C) — measured</label>
+          <input type="number" id="in-temp" value="1667" step="1" />
+        </div>
+        <div>
+          <label class="field-label">Scrap weight (t) — measured</label>
+          <input type="number" id="in-scrapweight" value="69.6" step="0.1" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn btn-primary" id="submit-heat">Assemble &amp; write DPP event</button>
+      </div>
+      <div id="portal-msg"></div>
+    </div>
+  </section>
+
+  <!-- ===================== LEDGER TAB ===================== -->
+  <section id="tab-ledger" class="tab-panel">
+    <div class="hero">
+      <h1>Ledger explorer</h1>
+      <p>Every block links to the previous one via its hash — a permissioned Hyperledger Fabric channel in production. Select a block, then try tampering with it to see how the mismatch surfaces.</p>
+    </div>
+    <div id="chain-container"></div>
+    <div id="block-detail" class="detail-panel"></div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="legend">
+    <span><span class="dot" style="background:var(--blue-steel)"></span>Measured</span>
+    <span><span class="dot" style="background:var(--amber)"></span>CV-derived</span>
+    <span><span class="dot" style="background:var(--violet)"></span>Model-derived</span>
+    <span><span class="dot" style="background:var(--slate)"></span>Provenance</span>
+    <span><span class="dot" style="background:var(--green-700)"></span>On-chain</span>
+  </div>
+  <div style="margin-top:14px;">
+    Off-chain evidence (images, furnace logs, certificates) is never written to the ledger — only its SHA-256 hash is. Public verification runs as boolean claim checks, mirroring the ZK-proof disclosure boundary described in the solution report; this browser demo computes the check directly rather than through an actual zk-SNARK circuit.
+  </div>
+  <div style="margin-top:10px;">
+    <button id="reset-demo" class="btn btn-ghost" style="padding:6px 12px;font-size:12px;">Reset demo data</button>
+  </div>
+</footer>
+
+<script>
+// ---------------------------------------------------------------
+// State
+// ---------------------------------------------------------------
+let role = 'public';
+let onChain = [];        // array of blocks
+let offChain = {};       // heatId -> full payload
+let selectedBlockIdx = null;
+let tamperState = null;  // { field, original, edited }
+
+const ONCHAIN_KEY = 'gsp_onchain_v1';
+const OFFCHAIN_KEY = 'gsp_offchain_v1';
+const SEED_KEY = 'gsp_seeded_v1';
+
+// ---------------------------------------------------------------
+// Utilities
+// ---------------------------------------------------------------
+async function sha256Hex(str){
+  const enc = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest('SHA-256', enc);
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function short(hash){ return hash ? hash.slice(0,10)+'…'+hash.slice(-6) : ''; }
+function fmt(n, d=1){ return Number(n).toFixed(d); }
+
+function classifyGrade(contam){
+  if (contam < 15) return 'E1 — Old thick steel scrap';
+  if (contam < 30) return 'E3 — Thin new production steel scrap (compressed/baled)';
+  if (contam < 50) return 'E6 — Mixed scrap, moderate contamination';
+  if (contam < 70) return 'E8 — High painted/galvanized fraction';
+  return 'EHRB — Heavy residual/contaminated scrap';
+}
+function estimateCarbonIntensity(v){
+  const base = 305;
+  const est = base
+    - 0.0006*(v.electricityKwh-26000)
+    + 0.45*(v.steelOutputT-60)
+    - 0.02*(v.carbonInjectionKg-600)
+    + 0.01*(v.temperatureC-1650)
+    + 0.05*(v.scrapWeightT-70);
+  return Math.round(est*100)/100;
+}
+
+// ---------------------------------------------------------------
+// Storage — plain localStorage, since this file runs as a standalone
+// page (opened directly or hosted), not inside a claude.ai artifact
+// sandbox. Persists across reloads in the same browser/machine, which
+// is what you want for a live walkthrough or a kiosk-style demo.
+// ---------------------------------------------------------------
+async function loadState(){
+  try{ onChain = JSON.parse(localStorage.getItem(ONCHAIN_KEY) || '[]'); }catch(e){ onChain = []; }
+  try{ offChain = JSON.parse(localStorage.getItem(OFFCHAIN_KEY) || '{}'); }catch(e){ offChain = {}; }
+}
+async function saveOnChain(){
+  localStorage.setItem(ONCHAIN_KEY, JSON.stringify(onChain));
+}
+async function saveOffChain(){
+  localStorage.setItem(OFFCHAIN_KEY, JSON.stringify(offChain));
+}
+
+async function seedIfNeeded(){
+  await loadState();
+  const seeded = localStorage.getItem(SEED_KEY);
+  if (seeded || onChain.length) return;
+
+  const samples = [
+    {heatId:'HEAT-2026-0417', contam:22, steelOutputT:61.9, electricityKwh:26200, carbonInjectionKg:624, temperatureC:1667, scrapWeightT:69.6, writer:'MillAMSP'},
+    {heatId:'HEAT-2026-0418', contam:58, steelOutputT:54.2, electricityKwh:24100, carbonInjectionKg:588, temperatureC:1642, scrapWeightT:63.4, writer:'MillBMSP'},
+    {heatId:'HEAT-2026-0419', contam:8,  steelOutputT:70.5, electricityKwh:28650, carbonInjectionKg:701, temperatureC:1689, scrapWeightT:76.1, writer:'MillAMSP'},
+  ];
+  for (const s of samples){
+    await writeHeat(s, {silent:true});
+  }
+  await saveOnChain();
+  await saveOffChain();
+  localStorage.setItem(SEED_KEY, 'true');
+}
+
+// ---------------------------------------------------------------
+// Core write path (mirrors CreateDPPEvent in the chaincode)
+// ---------------------------------------------------------------
+async function writeHeat(v, opts={}){
+  const steelGrade = classifyGrade(v.contam);
+  const carbonIntensity = estimateCarbonIntensity(v);
+  const modelVersion = v.modelVersion || 'gsp-pipeline-v0.3';
+
+  const offChainPayload = {
+    heatId: v.heatId,
+    steelGrade,
+    steelOutputT: v.steelOutputT,
+    electricityKwh: v.electricityKwh,
+    carbonInjectionKg: v.carbonInjectionKg,
+    temperatureC: v.temperatureC,
+    scrapWeightT: v.scrapWeightT,
+    carbonIntensity,
+    modelVersion,
+    imageRef: 'IMG-'+Math.random().toString(36).slice(2,8),
+    furnaceLogRef: 'LOG-'+Math.random().toString(36).slice(2,8),
+  };
+  const evidenceHash = await sha256Hex(JSON.stringify(offChainPayload));
+  const prevHash = onChain.length ? onChain[onChain.length-1].blockHash : '0'.repeat(64);
+  const timestamp = new Date().toISOString();
+  const blockCore = {
+    index: onChain.length,
+    heatId: v.heatId,
+    evidenceHash,
+    modelVersion,
+    writer: v.writer,
+    timestamp,
+    prevHash,
+  };
+  const blockHash = await sha256Hex(JSON.stringify(blockCore));
+  const block = {...blockCore, blockHash, verifications: []};
+
+  offChain[v.heatId] = offChainPayload;
+  onChain.push(block);
+
+  if (!opts.silent){
+    await saveOffChain();
+    await saveOnChain();
+  }
+}
+
+// ---------------------------------------------------------------
+// Rendering: Viewer tab
+// ---------------------------------------------------------------
+function renderSuggestions(){
+  const row = document.getElementById('suggest-row');
+  if (!onChain.length){ row.innerHTML = ''; return; }
+  row.innerHTML = 'Try: ' + onChain.map(b=>`<button data-heat="${b.heatId}">${b.heatId}</button>`).join('');
+  row.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.getElementById('search-input').value = btn.dataset.heat;
+      lookupHeat(btn.dataset.heat);
+    });
+  });
+}
+
+async function lookupHeat(heatId){
+  const result = document.getElementById('viewer-result');
+  const block = onChain.find(b=>b.heatId === heatId);
+  if (!block){
+    result.innerHTML = `<div class="empty">No DPP event found for <strong>${heatId||'(empty)'}</strong>. Submit it from the Mill Portal first, or try one of the suggestions above.</div>`;
+    return;
+  }
+
+  if (role === 'auditor'){
+    const payload = offChain[heatId];
+    const liveHash = await sha256Hex(JSON.stringify(payload));
+    const verified = liveHash === block.evidenceHash;
+    result.innerHTML = renderAuditorCertificate(block, payload, verified);
+    wireAuditorTamperControls(block, payload);
+  } else {
+    result.innerHTML = renderPublicCertificate(block);
+    wireZkControls(block);
+  }
+}
+
+function renderAuditorCertificate(block, payload, verified){
+  return `
+  <div class="certificate">
+    <div class="stamp ${verified?'':'bad'}">${verified? 'VERIFIED<br/>INTEGRITY' : 'HASH<br/>MISMATCH'}</div>
+    <div class="cert-head">
+      <div>
+        <h2>${block.heatId}</h2>
+        <div class="sub">Digital Product Passport · auditor view</div>
+      </div>
+    </div>
+    <div class="field"><span class="fname">Heat ID<span class="tag prov">provenance</span></span><span class="fval mono">${block.heatId}</span></div>
+    <div class="field"><span class="fname">Scrap grade<span class="tag cv">CV-derived</span></span><span class="fval">${payload.steelGrade}</span></div>
+    <div class="field"><span class="fname">Steel output<span class="tag measured">measured</span></span><span class="fval">${fmt(payload.steelOutputT)} t</span></div>
+    <div class="field"><span class="fname">Electricity<span class="tag measured">measured</span></span><span class="fval">${fmt(payload.electricityKwh,0)} kWh</span></div>
+    <div class="field"><span class="fname">Carbon injection<span class="tag measured">measured</span></span><span class="fval">${fmt(payload.carbonInjectionKg,0)} kg</span></div>
+    <div class="field"><span class="fname">Furnace temperature<span class="tag measured">measured</span></span><span class="fval">${fmt(payload.temperatureC,0)} °C</span></div>
+    <div class="field"><span class="fname">Scrap weight<span class="tag measured">measured</span></span><span class="fval">${fmt(payload.scrapWeightT)} t</span></div>
+    <div class="field"><span class="fname">Carbon intensity<span class="tag model">model-derived</span></span><span class="fval">${fmt(payload.carbonIntensity)} kgCO₂e/t</span></div>
+    <div class="field"><span class="fname">Model version<span class="tag prov">provenance</span></span><span class="fval mono">${payload.modelVersion}</span></div>
+    <div class="field"><span class="fname">Written by<span class="tag chain">on-chain</span></span><span class="fval mono">${block.writer}</span></div>
+
+    <div class="hash-box">
+      <div class="row"><span>Stored evidence hash (on-chain)</span><span class="mono">${short(block.evidenceHash)}</span></div>
+      <div class="row" id="live-hash-row"><span>Recomputed hash (live, from off-chain payload)</span><span class="mono" id="live-hash-val">${short(block.evidenceHash)}</span></div>
+    </div>
+
+    <div class="zk-box">
+      <h3>Sandbox: try tampering with this record</h3>
+      <p class="note">This edits a local copy only — nothing is written to the ledger. It shows what happens if someone alters off-chain data after the fact.</p>
+      <div class="zk-row">
+        <label style="font-size:12.5px;color:var(--ink-soft);">Edit steel output (t):</label>
+        <input type="number" id="tamper-input" value="${payload.steelOutputT}" step="0.1" />
+        <button class="btn btn-danger" id="tamper-btn">Apply &amp; recompute hash</button>
+        <button class="btn btn-ghost" id="tamper-reset">Reset</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderPublicCertificate(block){
+  const verifs = block.verifications.map(v=>`
+    <div class="verif-item">
+      <span>${v.claim}</span>
+      <span class="${v.verified?'ok':'no'}">${v.verified? '✓ Verified' : '✗ Not met'}</span>
+    </div>`).join('');
+
+  return `
+  <div class="certificate">
+    <div class="stamp">ON-CHAIN<br/>RECORD</div>
+    <div class="cert-head">
+      <div>
+        <h2>${block.heatId}</h2>
+        <div class="sub">Digital Product Passport · public view</div>
+      </div>
+    </div>
+    <div class="field"><span class="fname">Heat ID<span class="tag prov">provenance</span></span><span class="fval mono">${block.heatId}</span></div>
+    <div class="field"><span class="fname">Model version<span class="tag prov">provenance</span></span><span class="fval mono">${block.modelVersion}</span></div>
+    <div class="field"><span class="fname">Recorded<span class="tag prov">provenance</span></span><span class="fval">${new Date(block.timestamp).toLocaleString()}</span></div>
+    <div class="field"><span class="fname">Evidence hash<span class="tag chain">on-chain</span></span><span class="fval mono">${short(block.evidenceHash)}</span></div>
+
+    <div class="zk-box">
+      <h3>Verify a claim about this heat</h3>
+      <p class="note">The exact carbon-intensity figure isn't shown here — only whether it satisfies a threshold you choose, matching the ZK-verification design: a claim is provable without exposing the underlying plant data.</p>
+      <div class="zk-row">
+        <input type="number" id="zk-threshold" placeholder="e.g. 310" />
+        <button class="btn btn-primary" id="zk-verify-btn">Verify: carbon intensity ≤ threshold</button>
+      </div>
+      <div class="verif-list" id="verif-list">${verifs}</div>
+    </div>
+  </div>`;
+}
+
+function wireZkControls(block){
+  const btn = document.getElementById('zk-verify-btn');
+  if (!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const threshold = parseFloat(document.getElementById('zk-threshold').value);
+    if (isNaN(threshold)) return;
+    const payload = offChain[block.heatId];
+    const verified = payload.carbonIntensity <= threshold;
+    block.verifications.push({
+      claim: `carbon intensity ≤ ${threshold} kgCO₂e/t`,
+      verified,
+      verifierMSP: 'PublicPortal',
+    });
+    await saveOnChain();
+    document.getElementById('viewer-result').innerHTML = renderPublicCertificate(block);
+    wireZkControls(block);
+  });
+}
+
+function wireAuditorTamperControls(block, payload){
+  const btn = document.getElementById('tamper-btn');
+  const reset = document.getElementById('tamper-reset');
+  if (!btn) return;
+  btn.addEventListener('click', async ()=>{
+    const newVal = parseFloat(document.getElementById('tamper-input').value);
+    const editedPayload = {...payload, steelOutputT: newVal};
+    const liveHash = await sha256Hex(JSON.stringify(editedPayload));
+    const row = document.getElementById('live-hash-row');
+    const stamp = document.querySelector('.stamp');
+    if (liveHash !== block.evidenceHash){
+      row.innerHTML = `<span>Recomputed hash (live, tampered)</span><span class="mono" style="color:var(--danger)">${short(liveHash)}</span>`;
+      stamp.classList.add('bad');
+      stamp.innerHTML = 'HASH<br/>MISMATCH';
+    }
+  });
+  reset.addEventListener('click', ()=>{
+    lookupHeat(block.heatId);
+  });
+}
+
+// ---------------------------------------------------------------
+// Rendering: Ledger tab
+// ---------------------------------------------------------------
+async function renderLedger(){
+  const container = document.getElementById('chain-container');
+  if (!onChain.length){
+    container.innerHTML = `<div class="empty">No blocks yet. Submit a heat from the Mill Portal.</div>`;
+    return;
+  }
+  let html = '<div class="chain-scroll">';
+  onChain.forEach((b, i)=>{
+    if (i>0) html += `<div class="link"><div class="bar"></div></div>`;
+    html += `
+      <div class="block-node ${selectedBlockIdx===i?'selected':''}" data-idx="${i}">
+        <div class="bi">Block #${b.index} · ${b.writer}</div>
+        <div class="bh">${b.heatId}</div>
+        <div class="bhash">${short(b.blockHash)}</div>
+      </div>`;
+  });
+  html += '</div>';
+  container.innerHTML = html;
+  container.querySelectorAll('.block-node').forEach(node=>{
+    node.addEventListener('click', ()=>{
+      selectedBlockIdx = parseInt(node.dataset.idx);
+      renderLedger();
+      renderBlockDetail();
+    });
+  });
+}
+
+async function renderBlockDetail(){
+  const panel = document.getElementById('block-detail');
+  if (selectedBlockIdx===null){ panel.innerHTML=''; return; }
+  const b = onChain[selectedBlockIdx];
+  panel.innerHTML = `
+    <div class="card">
+      <h3 style="margin-top:0;">Block #${b.index} — ${b.heatId}</h3>
+      <div class="field"><span class="fname">Writer identity</span><span class="fval mono">${b.writer}</span></div>
+      <div class="field"><span class="fname">Timestamp</span><span class="fval">${new Date(b.timestamp).toLocaleString()}</span></div>
+      <div class="field"><span class="fname">Model version</span><span class="fval mono">${b.modelVersion}</span></div>
+      <div class="field"><span class="fname">Previous block hash</span><span class="fval mono">${short(b.prevHash)}</span></div>
+      <div class="field"><span class="fname">Evidence hash</span><span class="fval mono">${short(b.evidenceHash)}</span></div>
+      <div class="field"><span class="fname">Block hash (stored)</span><span class="fval mono">${short(b.blockHash)}</span></div>
+
+      <div class="section-title">Tamper test — edit the model version and recompute</div>
+      <div class="zk-row">
+        <input type="text" id="block-tamper-input" value="${b.modelVersion}" style="width:220px;"/>
+        <button class="btn btn-danger" id="block-tamper-btn">Recompute block hash</button>
+        <button class="btn btn-ghost" id="block-tamper-reset">Reset</button>
+      </div>
+      <div id="block-diff"></div>
+    </div>
+  `;
+  document.getElementById('block-tamper-btn').addEventListener('click', async ()=>{
+    const newVer = document.getElementById('block-tamper-input').value;
+    const editedCore = {index:b.index, heatId:b.heatId, evidenceHash:b.evidenceHash, modelVersion:newVer, writer:b.writer, timestamp:b.timestamp, prevHash:b.prevHash};
+    const liveHash = await sha256Hex(JSON.stringify(editedCore));
+    const mismatch = liveHash !== b.blockHash;
+    document.getElementById('block-diff').innerHTML = `
+      <div class="diff-row">
+        <div class="diff-col ${mismatch?'mismatch':''}"><strong>Recomputed hash</strong><br/>${liveHash}</div>
+        <div class="diff-col"><strong>Ledger-stored hash</strong><br/>${b.blockHash}</div>
+      </div>
+      <p style="font-size:12.5px;color:${mismatch?'var(--danger)':'var(--green-700)'};margin-top:10px;">
+        ${mismatch ? 'Mismatch — this block would be rejected as tampered.' : 'Hashes match — no tampering detected.'}
+      </p>`;
+    if (mismatch){
+      document.querySelector(`.block-node[data-idx="${b.index}"]`).classList.add('bad');
+    }
+  });
+  document.getElementById('block-tamper-reset').addEventListener('click', ()=>{
+    renderBlockDetail();
+    renderLedger();
+  });
+}
+
+// ---------------------------------------------------------------
+// Tabs & role switching
+// ---------------------------------------------------------------
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'ledger'){ renderLedger(); renderBlockDetail(); }
+  });
+});
+document.getElementById('role-public').addEventListener('click', ()=>{
+  role='public';
+  document.getElementById('role-public').classList.add('active');
+  document.getElementById('role-auditor').classList.remove('active');
+  document.getElementById('viewer-result').innerHTML='';
+});
+document.getElementById('role-auditor').addEventListener('click', ()=>{
+  role='auditor';
+  document.getElementById('role-auditor').classList.add('active');
+  document.getElementById('role-public').classList.remove('active');
+  document.getElementById('viewer-result').innerHTML='';
+});
+
+// ---------------------------------------------------------------
+// Search
+// ---------------------------------------------------------------
+document.getElementById('search-btn').addEventListener('click', ()=>{
+  lookupHeat(document.getElementById('search-input').value.trim());
+});
+document.getElementById('search-input').addEventListener('keydown', (e)=>{
+  if (e.key==='Enter') lookupHeat(e.target.value.trim());
+});
+
+// ---------------------------------------------------------------
+// Mill portal
+// ---------------------------------------------------------------
+document.getElementById('in-contam').addEventListener('input', (e)=>{
+  document.getElementById('contam-val').textContent = e.target.value;
+});
+document.getElementById('submit-heat').addEventListener('click', async ()=>{
+  const writer = document.getElementById('mill-identity').value;
+  const msg = document.getElementById('portal-msg');
+  if (writer === 'guest'){
+    msg.innerHTML = `<div class="perm-note">Write rejected: identity "guest" is not an enrolled mill organization. The smart contract only accepts writes from enrolled MSPs (MillAMSP, MillBMSP).</div>`;
+    return;
+  }
+  const heatId = document.getElementById('in-heatid').value.trim();
+  if (!heatId){
+    msg.innerHTML = `<div class="perm-note">Enter a Heat ID before submitting.</div>`;
+    return;
+  }
+  if (onChain.find(b=>b.heatId===heatId)){
+    msg.innerHTML = `<div class="perm-note">A DPP event for ${heatId} already exists and cannot be overwritten (immutability rule).</div>`;
+    return;
+  }
+  const v = {
+    heatId,
+    writer,
+    modelVersion: document.getElementById('in-modelver').value.trim(),
+    contam: parseFloat(document.getElementById('in-contam').value),
+    steelOutputT: parseFloat(document.getElementById('in-steeloutput').value),
+    electricityKwh: parseFloat(document.getElementById('in-electricity').value),
+    carbonInjectionKg: parseFloat(document.getElementById('in-carboninj').value),
+    temperatureC: parseFloat(document.getElementById('in-temp').value),
+    scrapWeightT: parseFloat(document.getElementById('in-scrapweight').value),
+  };
+  await writeHeat(v);
+  msg.innerHTML = `<div class="success-note">DPP event written for <strong>${heatId}</strong> by ${writer}. Block #${onChain.length-1} added to the ledger. Look it up in the DPP Viewer or Ledger Explorer.</div>`;
+  document.getElementById('in-heatid').value = '';
+  renderSuggestions();
+});
+
+// ---------------------------------------------------------------
+// Init
+// ---------------------------------------------------------------
+document.getElementById('reset-demo').addEventListener('click', async ()=>{
+  localStorage.removeItem(ONCHAIN_KEY);
+  localStorage.removeItem(OFFCHAIN_KEY);
+  localStorage.removeItem(SEED_KEY);
+  selectedBlockIdx = null;
+  document.getElementById('viewer-result').innerHTML = '';
+  document.getElementById('search-input').value = '';
+  await seedIfNeeded();
+  await loadState();
+  renderSuggestions();
+  renderLedger();
+  renderBlockDetail();
+});
+
+(async function init(){
+  await seedIfNeeded();
+  await loadState();
+  renderSuggestions();
+})();
+</script>
+</body>
+</html>
